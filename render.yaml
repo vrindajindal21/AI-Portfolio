@@ -1,0 +1,31 @@
+services:
+  # Backend Service (FastAPI)
+  - type: web
+    name: ai-portfolio-backend
+    env: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false # Set this in the Render Dashboard
+      - key: OPENROUTER_MODEL
+        value: google/gemini-2.0-flash-exp:free
+
+  # Frontend Service (Vite React)
+  - type: static
+    name: ai-portfolio-frontend
+    env: static
+    region: oregon
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    publishPath: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          name: ai-portfolio-backend
+          type: web
+          property: url
