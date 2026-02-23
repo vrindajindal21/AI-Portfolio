@@ -7,8 +7,14 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import sqlite3
 import json
-from pathlib import Path
 import os
+import sys
+from pathlib import Path
+
+# Ensure the backend directory is in the python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
 
 from resume_data import SAMPLE_RESUME
 from chat_engine import ask_question
