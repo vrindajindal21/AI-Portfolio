@@ -99,13 +99,18 @@ export default function Chat() {
         body: JSON.stringify({ message: msg }),
       });
 
-      if (!response.ok) throw new Error('Failed to fetch');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || 'Backend error');
+      }
+
       const data = await response.json();
       setMessages(prev => [...prev, { role: 'assistant', text: data.reply, timestamp: new Date() }]);
-    } catch {
+    } catch (err) {
+      console.error("Chat Connection Error:", err);
       setMessages(prev => [...prev, {
         role: 'assistant',
-        text: "I'm having trouble connecting right now. Please make sure the **backend server** is running on port 8000!",
+        text: "I'm having a bit of trouble connecting to my AI brain right now. Please try again in a moment! (Double-check that the Backend Service is live on Render)",
         timestamp: new Date()
       }]);
     } finally {

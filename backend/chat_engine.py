@@ -105,13 +105,26 @@ async def ask_question(question: str, resume_context: str) -> str:
         async with httpx.AsyncClient(timeout=10.0) as client:
             response = await client.post(
                 "https://openrouter.ai/api/v1/chat/completions",
-                headers={"Authorization": f"Bearer {OPENROUTER_API_KEY}", "Content-Type": "application/json"},
-                json={"model": OPENROUTER_MODEL, "messages": [{"role": "user", "content": prompt}]}
+                headers={
+                    "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://vrinda-portfolio.com",
+                },
+                json={
+                    "model": OPENROUTER_MODEL,
+                    "messages": [{"role": "user", "content": prompt}]
+                }
             )
-            data = response.json()
-            return data['choices'][0]['message']['content']
-    except Exception:
-        pass
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "choices" in data and len(data["choices"]) > 0:
+                    return data["choices"][0]["message"]["content"]
+            
+            logging.error(f"OpenRouter Error: {response.status_code} - {response.text}")
+
+    except Exception as e:
+        logging.error(f"AI Chat Exception: {e}")
          
-    return f"Vrinda is a **BCA AI student** with an **8.82 CGPA** and expertise in Python and AI/ML. She is a proven leader and available for 2026 internships."
+    return f"Vrinda is a **BCA AI student** at Bennett University with an **8.82 CGPA**. She is currently seeking software and AI/ML internships for 2026."
 
