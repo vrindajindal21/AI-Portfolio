@@ -2,18 +2,25 @@ from fastapi import FastAPI, HTTPException
 import logging
 import traceback
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import sqlite3
 import json
 from pathlib import Path
-import asyncio
+import os
 
 from resume_data import SAMPLE_RESUME
 from chat_engine import ask_question
 
 DB_PATH = Path(__file__).parent / "data.db"
+# Path to the frontend build artifacts
+FRONTEND_PATH = Path(__file__).parent.parent / "frontend" / "dist"
 
 app = FastAPI()
+
+# Only keep CORS for local development; in production, 
+# the frontend is served from the same origin.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -76,16 +83,30 @@ async def chat(req: ChatRequest):
     try:
         reply = await ask_question(req.message, context)
     except Exception as e:
-        # Log full traceback for debugging
         logging.error("Error in /api/chat: %s", str(e))
         logging.error(traceback.format_exc())
-        # Return a helpful error message to the client without leaking secrets
         raise HTTPException(status_code=500, detail=f"Chat backend error: {str(e)}")
     return {"reply": reply}
 
 
+# Serve Frontend Static Files
+if FRONTEND_PATH.exists():
+    app.mount("/assets", StaticFiles(directory=FRONTEND_PATH / "assets"), name="static")
+
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        # API requests should already be handled above
+        # If it's not an API request, serve the index.html for SPA routing
+        if full_path.startswith("api/"):
+             raise HTTPException(status_code=404, detail="API route not found")
+        
+        file_path = FRONTEND_PATH / full_path
+        if full_path != "" and file_path.exists():
+            return FileResponse(file_path)
+        return FileResponse(FRONTEND_PATH / "index.html")
+
+
 if __name__ == "__main__":
     import uvicorn
-    import os
     port = int(os.getenv("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
