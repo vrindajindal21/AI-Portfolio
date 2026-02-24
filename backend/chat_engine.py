@@ -38,7 +38,7 @@ async def ask_question(question: str, resume_context: str) -> str:
             "Team Leader for multiple project development groups"
         ],
         "interests": ["AI/ML Internship", "Python Developer Internship", "Software Developer Intern"],
-        "hobbies": ["Reading", "Traveling", "Exploring AI Trends"],
+        "hobbies": ["Reading", "Traveling", "Exploring AI Trends", "Music"],
         "awards": ["Dean's List Award for Academic Excellence"]
     }
 

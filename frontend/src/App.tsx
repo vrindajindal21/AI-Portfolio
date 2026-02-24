@@ -19,7 +19,9 @@ import {
   Heart,
   TrendingUp,
   Target,
-  FileText
+  FileText,
+  Menu,
+  X
 } from 'lucide-react';
 import { useScroll, useSpring } from 'framer-motion';
 import Chat from './components/Chat';
@@ -218,6 +220,7 @@ export default function App() {
   const [showChatPopup, setShowChatPopup] = useState(false);
   const [popupDismissed, setPopupDismissed] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const THEMES = [
     { id: 'violet', label: 'Violet', accent: '#8b5cf6', secondary: '#06b6d4', bg: '#020617', bgDark: '#0f172a', textMain: '#f8fafc', textMuted: '#94a3b8', glass: 'rgba(15,23,42,0.65)', card: '#1e293b' },
@@ -476,7 +479,7 @@ export default function App() {
       <nav className={`navbar ${isScrolled ? 'glass' : ''}`}>
         <div className="container">
           <div className="logo">Vrinda.AI</div>
-          <div className="nav-links">
+          <div className={`nav-links ${isMenuOpen ? 'mobile-active' : ''}`}>
             {[
               { href: '#about', label: 'Profile', id: 'about' },
               { href: '#projects', label: 'Portfolio', id: 'projects' },
@@ -486,6 +489,7 @@ export default function App() {
               <a
                 key={link.id}
                 href={link.href}
+                onClick={() => setIsMenuOpen(false)}
                 style={{
                   color: activeSection === link.id ? 'var(--accent)' : undefined,
                   position: 'relative',
@@ -506,9 +510,21 @@ export default function App() {
               </a>
             ))}
           </div>
-          <div className="cta-group">
-            <a href="https://www.linkedin.com/in/vrinda-jindal-936749361" target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ padding: '8px' }}><Linkedin size={20} /></a>
-            <a href="mailto:e23bcau0076@bennett.edu.in" className="btn-secondary" style={{ padding: '8px' }}><Mail size={20} /></a>
+          <div className="cta-group" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button
+              className="menu-toggle"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              style={{
+                background: 'none', border: 'none', color: 'var(--text-main)',
+                cursor: 'pointer', display: 'none', padding: '8px'
+              }}
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+            <div className="nav-actions">
+              <a href="https://www.linkedin.com/in/vrinda-jindal-936749361" target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ padding: '8px' }}><Linkedin size={20} /></a>
+              <a href="mailto:e23bcau0076@bennett.edu.in" className="btn-secondary" style={{ padding: '8px' }}><Mail size={20} /></a>
+            </div>
           </div>
         </div>
       </nav>
