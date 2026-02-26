@@ -130,6 +130,70 @@ const FALLBACK_PROJECTS = [
     year: "2025",
     github: "https://github.com/vrindajindal21/-titanic-chatbot",
     demo: "https://titanic-chat.streamlit.app/"
+  },
+  {
+    title: "Resume Analyzer",
+    description: "Developed an application that analyzes resumes based on job descriptions using natural language processing techniques.",
+    tags: ["Python", "NLP", "Flask"],
+    year: "2025",
+    github: "https://github.com/vrindajindal21",
+    demo: "#"
+  },
+  {
+    title: "Wild Animal Detection & Alert System",
+    description: "Built a real-time YOLO-based animal detection system that processes live video via OpenCV and triggers instant SMS/notification alerts for safety monitoring.",
+    tags: ["Deep Learning", "Python", "OpenCV"],
+    year: "2025",
+    github: "https://github.com/vrindajindal21",
+    demo: "#"
+  },
+  {
+    title: "Human vs Animal Image Classifier",
+    description: "Built a website that classifies uploaded images as either human or animal using ANN, RNN, and CNN models.",
+    tags: ["Deep Learning", "CNN", "Python"],
+    year: "2025",
+    github: "https://github.com/vrindajindal21",
+    demo: "#"
+  },
+  {
+    title: "Daily Buddy App",
+    description: "[Releasing soon on Play Store] Designed a mobile app to plan daily schedules, send personalized notifications, and manage tasks, Budget, health tracker and many more features.",
+    tags: ["Mobile", "UI/UX", "Firebase"],
+    year: "2025",
+    github: "https://github.com/vrindajindal21",
+    demo: "#"
+  },
+  {
+    title: "Health Tracker",
+    description: "Designed a custom health metric tracking system with configurable dashboards, allowing users to personalize their health monitoring experience.",
+    tags: ["Web Dev", "UI/UX", "JS"],
+    year: "2025",
+    github: "https://github.com/vrindajindal21",
+    demo: "#"
+  },
+  {
+    title: "Fraud Detection",
+    description: "Built a website that classifies where there is a fraud or not using Ai-ml techniques.",
+    tags: ["ML", "Python", "Flask"],
+    year: "2024",
+    github: "https://github.com/vrindajindal21",
+    demo: "#"
+  },
+  {
+    title: "Scientific Calculator",
+    description: "Built a GUI-based scientific calculator application using Python's Tkinter library.",
+    tags: ["Python", "GUI", "Tkinter"],
+    year: "2024",
+    github: "https://github.com/vrindajindal21",
+    demo: "#"
+  },
+  {
+    title: "Restaurant Website",
+    description: "Created a responsive and interactive restaurant website with a modern UI and smooth navigation.",
+    tags: ["HTML", "CSS", "JS"],
+    year: "2023",
+    github: "https://github.com/vrindajindal21",
+    demo: "#"
   }
 ];
 
