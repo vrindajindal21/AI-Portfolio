@@ -41,11 +41,14 @@ async def ask_question(question: str, resume_context: str) -> str:
     projects = data.get("projects", [])
     project_titles = [str(p.get("title")) for p in projects if p.get("title")]
     
-    skills = data.get("skills", {})
-    all_skills = []
-    for category in skills.values():
-        if isinstance(category, list):
-            all_skills.extend(category)
+    skills_dict = data.get("skills", {})
+    all_skills: list[str] = []
+    if isinstance(skills_dict, dict):
+        for category_items in skills_dict.values():
+            if isinstance(category_items, list):
+                for item in category_items:
+                    if isinstance(item, str):
+                        all_skills.append(item)
 
     # 1. INSTANT PROFESSIONAL RESPONSES (Rule-Based)
     
@@ -70,7 +73,7 @@ async def ask_question(question: str, resume_context: str) -> str:
         return f"{name} possesses strong foundations in: **{skills_str}**. She is proficient in bridging the gap between AI research and production-ready code."
 
     # Projects
-    if any(k in q for k in ["project", "build", "work", "analyzer", "wild animal", "animal", "human", "classifier", "fraud", "buddy", "health", "booking"]):
+    if any(k in q for k in ["project", "build", "work", "analyzer", "wild animal", "animal", "human", "classifier", "fraud", "buddy", "health", "booking", "titanic", "expert"]):
         p_list = "\n- ".join(project_titles)
         return (
             f"{name} has spearheaded {len(projects)} technical projects, including:\n\n"
