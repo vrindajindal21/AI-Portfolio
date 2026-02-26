@@ -127,7 +127,7 @@ export default function Chat() {
     setInput('');
   }
 
-  const showSuggestions = messages.length <= 1 && !loading;
+  const showSuggestions = !loading;
 
   return (
     <>

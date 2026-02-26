@@ -72,6 +72,53 @@ async def ask_question(question: str, resume_context: str) -> str:
 
     # 1. INSTANT PROFESSIONAL RESPONSES (Rule-Based)
     
+    # Projects (PRIORITY)
+    if any(k in q for k in ["project", "build", "work", "portfolio", "titanic", "expert", "analyzer", "animal", "classifier", "fraud", "buddy", "health", "calculator", "restaurant", "make", "create", "done", "detail"]):
+        # Check for specific project questions first
+        matching_project = None
+        for p in projects:
+            if isinstance(p, dict):
+                title = str(p.get("title", "")).lower()
+                # Match title words or the whole title
+                if any(word in q for word in title.split() if len(word) > 2):
+                    matching_project = p
+                    break
+        
+        if matching_project and isinstance(matching_project, dict):
+            p_title = matching_project.get('title', 'Project')
+            p_year = matching_project.get('year', '2025')
+            p_desc = matching_project.get('description', '')
+            p_tech = ", ".join(matching_project.get("tech_stack", []))
+            p_github = matching_project.get('github', '#')
+            p_demo = matching_project.get('demo', '#')
+            return (
+                f"### **{p_title}** ({p_year})\n\n"
+                f"{p_desc}\n\n"
+                f"**🛠️ Tech Stack:** {p_tech}\n\n"
+                f"🔗 [GitHub]({p_github}) | 🌐 [Live Demo]({p_demo})"
+            )
+
+        # General project list if no specific one matched
+        p_items: List[str] = []
+        if isinstance(projects, list):
+            for i in range(len(projects)):
+                p = projects[i]
+                if isinstance(p, dict):
+                    title = p.get('title', 'Unknown Project')
+                    p_year = p.get('year', '2024')
+                    tech_list = p.get('tech_stack', [])
+                    first_tech = tech_list[0] if tech_list and isinstance(tech_list, list) else "AI/Web"
+                    desc = p.get('description', '')
+                    short_desc = (desc[:75] + '...') if len(desc) > 75 else desc
+                    p_items.append(f"▸ **{title}** ({p_year}) [{first_tech}]: {short_desc}")
+        
+        p_list = "\n".join(p_items)
+        return (
+            f"{name} has spearheaded **{len(projects)} technical projects**, specializing in AI/ML and Production systems:\n\n"
+            f"{p_list}\n\n"
+            f"You can ask me for 'details on [project name]' to get the full tech stack and github links!"
+        )
+
     # Career Interests & Hiring
     if any(k in q for k in ["seeking", "opportunity", "opening", "career", "job", "internship", "role", "hire", "value", "interest"]):
         return (
@@ -100,43 +147,6 @@ async def ask_question(question: str, resume_context: str) -> str:
         skills_subset = [all_skills[i] for i in range(min(12, len(all_skills)))]
         skills_str = ", ".join(skills_subset) + ("..." if len(all_skills) > 12 else "")
         return f"{name} possesses strong foundations in: **{skills_str}**. She is proficient in bridging the gap between AI research and production-ready code."
-
-    # Projects
-    if any(k in q for k in ["project", "build", "work", "titanic", "expert", "analyzer", "animal", "classifier", "fraud", "buddy", "health", "calculator", "restaurant", "make", "create", "done", "detail"]):
-        # Check for specific project questions
-        for p in projects:
-            title = str(p.get("title", "")).lower()
-            if any(word in q for word in title.split() if len(word) > 3):
-                tech = ", ".join(p.get("tech_stack", []))
-                return (
-                    f"### **{p.get('title')}** ({p.get('year')})\n\n"
-                    f"{p.get('description')}\n\n"
-                    f"**🛠️ Tech Stack:** {tech}\n\n"
-                    f"🔗 [GitHub]({p.get('github')}) | 🌐 [Live Demo]({p.get('demo')})"
-                )
-
-        # General project list with more detail
-        p_items: List[str] = []
-        if isinstance(projects, list):
-            limit = len(projects)
-            for i in range(limit):
-                p = projects[i]
-                if isinstance(p, dict):
-                    title = p.get('title', 'Unknown Project')
-                    p_year = p.get('year', '2024')
-                    tech_list = p.get('tech_stack', [])
-                    first_tech = tech_list[0] if tech_list and isinstance(tech_list, list) else "AI/Web"
-                    desc = p.get('description', '')
-                    # Shorten desc for list
-                    short_desc = (desc[:75] + '...') if len(desc) > 75 else desc
-                    p_items.append(f"▸ **{title}** ({p_year}) [{first_tech}]: {short_desc}")
-        
-        p_list = "\n".join(p_items)
-        return (
-            f"{name} has spearheaded **{len(projects)} technical projects**, specializing in AI/ML and Production systems:\n\n"
-            f"{p_list}\n\n"
-            f"You can ask me for 'details on [project name]' to get the full tech stack and links!"
-        )
 
     # Leadership & Positions
     if any(k in q for k in ["leader", "role", "responsibility", "br", "batch", "representative", "team"]):
