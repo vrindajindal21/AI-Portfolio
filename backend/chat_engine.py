@@ -2,6 +2,7 @@ import os
 import httpx
 import json
 import logging
+from typing import List, Any
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -39,10 +40,16 @@ async def ask_question(question: str, resume_context: str) -> str:
     edu_str = f"{education_info.get('degree', 'BCA (AI)')} student at {education_info.get('institution', 'Bennett University')}, {education_info.get('score', 'CGPA: 8.82')}"
     
     projects = data.get("projects", [])
-    project_titles = [str(p.get("title")) for p in projects if p.get("title")]
+    project_titles: List[str] = []
+    if isinstance(projects, list):
+        for p in projects:
+            if isinstance(p, dict):
+                title = p.get("title")
+                if title:
+                    project_titles.append(str(title))
     
     skills_dict = data.get("skills", {})
-    all_skills: list[str] = []
+    all_skills: List[str] = []
     if isinstance(skills_dict, dict):
         for category_items in skills_dict.values():
             if isinstance(category_items, list):
@@ -69,22 +76,41 @@ async def ask_question(question: str, resume_context: str) -> str:
 
     # Skills & Tech Stack
     if any(k in q for k in ["skill", "tech", "stack", "know", "language", "python", "java", "c++", "ml", "ai", "deep learning", "dl", "nlp", "vision", "dsa", "web"]):
-        skills_str = ", ".join(all_skills[:12]) + ("..." if len(all_skills) > 12 else "")
+        skills_subset = [all_skills[i] for i in range(min(12, len(all_skills)))]
+        skills_str = ", ".join(skills_subset) + ("..." if len(all_skills) > 12 else "")
         return f"{name} possesses strong foundations in: **{skills_str}**. She is proficient in bridging the gap between AI research and production-ready code."
 
     # Projects
-    if any(k in q for k in ["project", "build", "work", "titanic", "expert", "analyzer", "animal", "classifier", "fraud", "buddy", "health", "calculator", "restaurant"]):
+    if any(k in q for k in ["project", "build", "work", "titanic", "expert", "analyzer", "animal", "classifier", "fraud", "buddy", "health", "calculator", "restaurant", "make", "create", "done"]):
         # Check for specific project questions
         for p in projects:
             title = str(p.get("title", "")).lower()
-            if any(word in q for word in title.split()):
-                return f"**{p.get('title')}** ({p.get('year')}):\n\n{p.get('description')}\n\n**Tech Stack:** {', '.join(p.get('tech_stack', []))}\n\n[GitHub]({p.get('github')}) | [Demo]({p.get('demo')})"
+            if any(word in q for word in title.split() if len(word) > 3):
+                tech = ", ".join(p.get("tech_stack", []))
+                return (
+                    f"### **{p.get('title')}** ({p.get('year')})\n\n"
+                    f"{p.get('description')}\n\n"
+                    f"**🛠️ Tech Stack:** {tech}\n\n"
+                    f"🔗 [GitHub]({p.get('github')}) | 🌐 [Live Demo]({p.get('demo')})"
+                )
 
-        p_list = "\n- ".join(project_titles)
+        # General project list
+        p_items: List[str] = []
+        if isinstance(projects, list):
+            limit = min(10, len(projects))
+            for i in range(limit):
+                p = projects[i]
+                if isinstance(p, dict):
+                    title = p.get('title', 'Unknown Project')
+                    tech_list = p.get('tech_stack', [])
+                    first_tech = tech_list[0] if tech_list and isinstance(tech_list, list) else "Tech"
+                    p_items.append(f"▸ **{title}** ({first_tech})")
+        
+        p_list = "\n".join(p_items)
         return (
-            f"{name} has spearheaded {len(projects)} technical projects, including:\n\n"
-            f"- {p_list}\n\n"
-            f"You can ask me specifically about any of these to learn more!"
+            f"{name} has spearheaded **{len(projects)} technical projects**, focusing on AI/ML and Full-Stack development:\n\n"
+            f"{p_list}\n\n"
+            f"Would you like more details on any specific project? Just ask!"
         )
 
     # Leadership
@@ -107,9 +133,10 @@ async def ask_question(question: str, resume_context: str) -> str:
     
     YOUR MISSION: 
     - Be extremely positive, professional, and highlight her strengths.
-    - Focus on her BCA (AI Specialization) and her strong academic performance.
-    - Use the provided context to answer specifically based on her latest resume data.
-    - If you don't know something, suggest they check her LinkedIn (in the footer) or email her.
+    - Focus on her BCA (AI Specialization) and her strong 8.82 academic CGPA.
+    - Use the provided context to answer specifically and FACTUALLY based on the data.
+    - CRITICAL: She has {len(projects)} projects in her portfolio. List them accurately if asked.
+    - If you don't know something, suggest they check her LinkedIn or email her.
     
     Resume Context: 
     {resume_context}
@@ -117,8 +144,8 @@ async def ask_question(question: str, resume_context: str) -> str:
     Question: {question}
     
     Rules:
-    - Use Markdown for bolding and lists.
-    - Keep it concise (max 2-3 sentences).
+    - Use Markdown for bolding and lists. Use '▸' for bullet points to match the theme.
+    - Keep it concise (max 3 sentences).
     - Avoid generic AI talk. Speak as her professional representative.
     """
 
