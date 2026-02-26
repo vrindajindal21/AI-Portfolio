@@ -123,10 +123,13 @@ async def ask_question(question: str, resume_context: str) -> str:
                 p = projects[i]
                 if isinstance(p, dict):
                     title = p.get('title', 'Unknown Project')
+                    p_year = p.get('year', '2024')
+                    tech_list = p.get('tech_stack', [])
+                    first_tech = tech_list[0] if tech_list and isinstance(tech_list, list) else "AI/Web"
                     desc = p.get('description', '')
                     # Shorten desc for list
-                    short_desc = (desc[:85] + '...') if len(desc) > 85 else desc
-                    p_items.append(f"▸ **{title}**: {short_desc}")
+                    short_desc = (desc[:75] + '...') if len(desc) > 75 else desc
+                    p_items.append(f"▸ **{title}** ({p_year}) [{first_tech}]: {short_desc}")
         
         p_list = "\n".join(p_items)
         return (
