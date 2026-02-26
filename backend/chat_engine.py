@@ -31,7 +31,11 @@ async def ask_question(question: str, resume_context: str) -> str:
 
     personal = data.get("personal_info", {})
     name = personal.get("name", "Vrinda Jindal")
-    education_info = data.get("education", [{}])[0]
+    education_list = data.get("education", [{}])
+    education_info = education_list[0] if isinstance(education_list, list) and education_list else {}
+    if not isinstance(education_info, dict):
+        education_info = {}
+        
     edu_str = f"{education_info.get('degree', 'BCA (AI)')} student at {education_info.get('institution', 'Bennett University')}, {education_info.get('score', 'CGPA: 8.82')}"
     
     projects = data.get("projects", [])

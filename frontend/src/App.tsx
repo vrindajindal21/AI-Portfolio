@@ -225,15 +225,21 @@ export default function App() {
           setResumeData(data);
 
           // Map Projects
-          if (data.projects) {
-            setProjects(data.projects.map((p: any) => ({
+          if (data.projects && Array.isArray(data.projects)) {
+            const fetchedProjects = data.projects.map((p: any) => ({
               title: p.title,
               description: p.description,
               tags: p.tech_stack || [],
               year: p.year,
               github: p.github || "https://github.com/vrindajindal21",
               demo: p.demo || "#"
-            })));
+            }));
+
+            // Safety Check: Only overwrite if the backend provides at least as many projects
+            // as our hardcoded list. This prevents stale backends from downgrading the view.
+            if (fetchedProjects.length >= projects.length) {
+              setProjects(fetchedProjects);
+            }
           }
 
           // Map Certifications
