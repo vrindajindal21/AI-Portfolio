@@ -17,37 +17,38 @@ async def ask_question(question: str, resume_context: str) -> str:
     """
     q = question.lower().strip()
     
-    # --- VRINDA'S FULL PROFESSIONAL PROFILE ---
-    profile = {
-        "name": "Vrinda Jindal",
-        "education": "BCA (AI Specialization) student at Bennett University (2023–2026), CGPA: 8.82",
-        "foundations": ["Practical AI/ML Implementation", "Software Development", "Python Ecosystem", "Full-stack Web Development", "Data Analytics"],
-        "projects": [
-            "Resume Analyzer (Practical NLP for Recruitment)",
-            "Wild Animal Detection (Real-time Vision using YOLO)",
-            "Human vs Animal Image Classifier (Multi-architecture CNN)",
-            "Fraud Detection (ML Classification System)",
-            "Daily Buddy (Full-stack Productivity Solution)",
-            "Health Tracker (Personalized Monitoring Dashboards)",
-            "Scientific Calculator (Python GUI Engineering)",
-            "Restaurant Website (Modern UI/UX Implementation)"
-        ],
-        "certifications": ["IBM", "UC San Diego", "Infosys", "Coursera"],
-        "leadership": [
-            "Batch Representative (BR) at Bennett University (Elected Leader)",
-            "Team Leader for multiple project development groups"
-        ],
-        "interests": ["AI/ML Internship", "Python Developer Internship", "Software Developer Intern"],
-        "hobbies": ["Reading", "Traveling", "Exploring AI Trends", "Music"],
-        "awards": ["Dean's List Award for Academic Excellence"]
-    }
+    # --- DYNAMIC DATA PARSING ---
+    try:
+        data = json.loads(resume_context)
+    except Exception:
+        # Fallback to a basic structure if parsing fails
+        data = {
+            "personal_info": {"name": "Vrinda Jindal"},
+            "education": [{"degree": "BCA (AI Specialization)", "institution": "Bennett University", "score": "8.82"}],
+            "projects": [],
+            "skills": {}
+        }
+
+    personal = data.get("personal_info", {})
+    name = personal.get("name", "Vrinda Jindal")
+    education_info = data.get("education", [{}])[0]
+    edu_str = f"{education_info.get('degree', 'BCA (AI)')} student at {education_info.get('institution', 'Bennett University')}, {education_info.get('score', 'CGPA: 8.82')}"
+    
+    projects = data.get("projects", [])
+    project_titles = [p.get("title") for p in projects]
+    
+    skills = data.get("skills", {})
+    all_skills = []
+    for category in skills.values():
+        if isinstance(category, list):
+            all_skills.extend(category)
 
     # 1. INSTANT PROFESSIONAL RESPONSES (Rule-Based)
     
     # Career Interests & Hiring
     if any(k in q for k in ["seeking", "opportunity", "opening", "career", "job", "internship", "role", "hire", "value", "interest"]):
         return (
-            f"Vrinda is a highly motivated **AI & Software Developer** and a **BCA (AI Specialization)** student. "
+            f"{name} is a highly motivated **AI & Software Developer** and a **BCA (AI Specialization)** student. "
             f"She translates complex AI/ML concepts into practical project implementation. "
             f"Currently, she is actively seeking **AI/ML, Python Developer, or Software Developer Internships** for 2026 where she can bring immediate value to innovative teams."
         )
@@ -55,39 +56,46 @@ async def ask_question(question: str, resume_context: str) -> str:
     # Education & Achievements
     if any(k in q for k in ["edu", "cgpa", "university", "college", "school", "grade", "study", "dean", "award", "list"]):
         return (
-            f"Vrinda is pursuing her **{profile['education']}**. "
-            f"She is a top-performing student with an impressive **8.82 CGPA** and has been recognized on the **Dean's List Award** for her academic excellence."
+            f"{name} is pursuing her **{edu_str}**. "
+            f"She is a top-performing student with an impressive **8.82 CGPA** and is dedicated to academic and technical excellence."
         )
 
     # Skills & Tech Stack
     if any(k in q for k in ["skill", "tech", "stack", "know", "language", "python", "java", "c++", "ml", "ai", "deep learning", "dl", "nlp", "vision", "dsa", "web"]):
-        return f"Vrinda possesses advanced foundations in: **{', '.join(profile['foundations'])}**. She is proficient in bridging the gap between AI research and production-ready code."
+        skills_str = ", ".join(all_skills[:12]) + ("..." if len(all_skills) > 12 else "")
+        return f"{name} possesses strong foundations in: **{skills_str}**. She is proficient in bridging the gap between AI research and production-ready code."
 
     # Projects
-    if any(k in q for k in ["project", "build", "work", "analyzer", "wild animal", "animal", "human", "classifier", "fraud", "buddy", "health"]):
-        p_list = "\n- ".join(profile['projects'])
-        return f"Vrinda has spearheaded over 8 technical projects, including:\n- {p_list}\nHer work focuses on real-time detection and NLP solutions."
+    if any(k in q for k in ["project", "build", "work", "analyzer", "wild animal", "animal", "human", "classifier", "fraud", "buddy", "health", "booking"]):
+        p_list = "\n- ".join(project_titles)
+        return (
+            f"{name} has spearheaded {len(projects)} technical projects, including:\n\n"
+            f"- {p_list}\n\n"
+            f"Her work spans across Real-time systems, Computer Vision, and NLP solutions."
+        )
 
     # Leadership
     if any(k in q for k in ["leader", "role", "responsibility", "br", "batch", "representative", "team"]):
+        responsibilities = data.get("positions_of_responsibility", [])
+        resp_str = "\n- ".join([f"**{r}**" for r in responsibilities]) if responsibilities else "leading various technical teams."
         return (
-            "Vrinda demonstrates exceptional leadership through her roles as:\n\n"
-            "1. **Batch Representative (BR)**: An elected position at Bennett University where she manages peer-faculty coordination.\n"
-            "2. **Team Leader**: Successfully steering development teams through high-pressure academic projects with a focus on delivery and collaboration."
+            f"{name} demonstrates exceptional leadership through her roles as:\n\n"
+            f"{resp_str}\n\n"
+            f"She focuses on delivery, collaboration, and steering teams through high-pressure development projects."
         )
 
     # 2. AI FALLBACK (OpenRouter) - For any complex HR questions
     if not OPENROUTER_API_KEY:
-        return "Vrinda is a dedicated BCA AI student with an 8.82 CGPA and a strong portfolio in AI/ML. She is available for 2026 internships."
+        return f"{name} is a dedicated BCA AI student with an 8.82 CGPA and a strong portfolio in AI/ML. She is available for 2026 internships."
 
     prompt = f"""
-    You are the AI Recruiter/Assistant for Vrinda Jindal. 
+    You are the AI Recruiter/Assistant for {name}. 
     A recruiter or HR professional is asking about her. 
     
     YOUR MISSION: 
     - Be extremely positive, professional, and highlight her strengths.
-    - Focus on her BCA (AI Specialization) and her strong 8.82 CGPA.
-    - Use the provided context to answer specifically.
+    - Focus on her BCA (AI Specialization) and her strong academic performance.
+    - Use the provided context to answer specifically based on her latest resume data.
     - If you don't know something, suggest they check her LinkedIn (in the footer) or email her.
     
     Resume Context: 
@@ -126,5 +134,5 @@ async def ask_question(question: str, resume_context: str) -> str:
     except Exception as e:
         logging.error(f"AI Chat Exception: {e}")
          
-    return f"Vrinda is a **BCA AI student** at Bennett University with an **8.82 CGPA**. She is currently seeking software and AI/ML internships for 2026."
+    return f"{name} is a **BCA AI student** at Bennett University with an **8.82 CGPA**. She is currently seeking software and AI/ML internships for 2026."
 

@@ -116,8 +116,8 @@ function HeroVisual() {
 
 const ALL_PROJECTS = [
   {
-    title: "Expert Booking System",
-    description: "A real-time platform for booking expert consultations, featuring instant scheduling, secure payments, and live availability tracking.",
+    title: "Real-time Expert Booking System",
+    description: "Developed a real-time platform for booking expert consultations with instant availability tracking and secure payment integration.",
     tags: ["React", "Node.js", "Web Dev", "Real-time"],
     year: "2024",
     github: "https://github.com/vrindajindal21/Real-Time-Expert-Session-Booking-System",
@@ -140,8 +140,8 @@ const ALL_PROJECTS = [
     demo: "#"
   },
   {
-    title: "Wild Animal Detection",
-    description: "Built a real-time YOLO-based animal detection system that processes live video via OpenCV and triggers instant notifications.",
+    title: "Wild Animal Detection & Alert System",
+    description: "Built a real-time YOLO-based animal detection system that processes live video via OpenCV and triggers instant SMS/notification alerts for safety monitoring.",
     tags: ["Deep Learning", "Python", "OpenCV"],
     year: "2025",
     github: "https://github.com",
@@ -157,21 +157,21 @@ const ALL_PROJECTS = [
   },
   {
     title: "Daily Buddy App",
-    description: "[Releasing soon on Play Store] Full-featured productivity mobile app for scheduling, task management, and budget tracking.",
+    description: "[Releasing soon on Play Store] Designed a mobile app to plan daily schedules, send personalized notifications, and manage tasks, Budget, health tracker and many more features.",
     tags: ["Mobile", "UI/UX", "Firebase"],
     year: "2025",
     github: "https://github.com"
   },
   {
     title: "Health Tracker",
-    description: "Designed a custom health metric tracking system with configurable dashboards and personalized health monitoring.",
+    description: "Designed a custom health metric tracking system with configurable dashboards, allowing users to personalize their health monitoring experience.",
     tags: ["Web Dev", "UI/UX", "JS"],
     year: "2025",
     github: "https://github.com"
   },
   {
     title: "Fraud Detection",
-    description: "Developed a machine learning-based web application to classify fraudulent and non-fraudulent transactions.",
+    description: "Built a website that classifies where there is a fraud or not using Ai-ml techniques.",
     tags: ["ML", "Python", "Flask"],
     year: "2024",
     github: "https://github.com",
