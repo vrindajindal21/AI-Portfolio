@@ -1352,7 +1352,7 @@ export default function App() {
               padding: '12px 14px', marginBottom: '16px',
               fontSize: '0.87rem', color: 'var(--text-muted)', lineHeight: 1.6,
             }}>
-              👋 Hi! I'm Vrinda's AI. Ask me about her <strong style={{ color: 'var(--text-main)' }}>projects, skills, or experience</strong> — I reply instantly!
+              👋 Hi! I'm Vrinda's AI. I can tell you about her **8.82 CGPA**, her **10+ AI projects**, or her availability for **2026 internships**. I reply instantly!
             </div>
 
             {/* Actions */}

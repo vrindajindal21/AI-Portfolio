@@ -5,11 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 type Message = { role: 'user' | 'assistant'; text: string; timestamp: Date };
 
 const SUGGESTED_QUESTIONS = [
-  "What projects has she built?",
-  "What are her technical skills?",
-  "Tell me about her education",
-  "Is she available for internships?",
-  "What data analyst skills does she have?",
+  { label: "🎓 Education", query: "Tell me about her education history", hint: "BCA AI (8.82 CGPA)" },
+  { label: "🤖 AI Projects", query: "Show me all her build projects", hint: "10+ (YOLO, NLP, ML)" },
+  { label: "💼 Internships", query: "Seeking internships", hint: "Open for AI/ML roles 2026" },
+  { label: "🎭 Hobbies", query: "What does she do for fun?", hint: "Reading & AI Research" },
 ];
 
 // Minimal markdown renderer (bold, bullet points, numbered lists)
@@ -210,27 +209,28 @@ export default function Chat() {
                 <Sparkles size={11} color="var(--accent)" /> Try asking:
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                {SUGGESTED_QUESTIONS.map(q => (
+                {SUGGESTED_QUESTIONS.map(s => (
                   <button
-                    key={q}
-                    onClick={() => handleSend(q)}
+                    key={s.label}
+                    onClick={() => handleSend(s.query)}
                     disabled={loading}
                     style={{
                       background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.25)',
-                      color: 'var(--text-main)', borderRadius: '20px', padding: '5px 12px',
-                      fontSize: '0.75rem', cursor: 'pointer', transition: 'all 0.2s', lineHeight: '1.3',
-                      textAlign: 'left'
+                      color: 'var(--text-main)', borderRadius: '16px', padding: '6px 14px',
+                      fontSize: '0.75rem', cursor: 'pointer', transition: 'all 0.2s', lineHeight: '1.4',
+                      textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '2px'
                     }}
                     onMouseEnter={e => {
-                      (e.target as HTMLButtonElement).style.background = 'rgba(139,92,246,0.2)';
-                      (e.target as HTMLButtonElement).style.borderColor = 'var(--accent)';
+                      (e.currentTarget).style.background = 'rgba(139,92,246,0.2)';
+                      (e.currentTarget).style.borderColor = 'var(--accent)';
                     }}
                     onMouseLeave={e => {
-                      (e.target as HTMLButtonElement).style.background = 'rgba(139,92,246,0.08)';
-                      (e.target as HTMLButtonElement).style.borderColor = 'rgba(139,92,246,0.25)';
+                      (e.currentTarget).style.background = 'rgba(139,92,246,0.08)';
+                      (e.currentTarget).style.borderColor = 'rgba(139,92,246,0.25)';
                     }}
                   >
-                    {q}
+                    <span style={{ fontWeight: 700 }}>{s.label}</span>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--accent-light, #a78bfa)', opacity: 0.9 }}>{s.hint}</span>
                   </button>
                 ))}
               </div>
