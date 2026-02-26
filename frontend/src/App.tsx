@@ -116,6 +116,22 @@ function HeroVisual() {
 
 const ALL_PROJECTS = [
   {
+    title: "Expert Booking System",
+    description: "A real-time platform for booking expert consultations, featuring instant scheduling, secure payments, and live availability tracking.",
+    tags: ["React", "Node.js", "Web Dev", "Real-time"],
+    year: "2024",
+    github: "https://github.com/vrindajindal21/Real-Time-Expert-Session-Booking-System",
+    demo: "https://real-time-expert-session-booking.vercel.app/"
+  },
+  {
+    title: "Titanic Chatbot",
+    description: "An interactive AI agent built with LangChain and FastAPI that analyzes the Titanic dataset, providing insights and visualizations.",
+    tags: ["AI", "FastAPI", "LangChain", "Data Analysis"],
+    year: "2025",
+    github: "https://github.com/vrindajindal21/-titanic-chatbot",
+    demo: "https://titanic-chat.streamlit.app/"
+  },
+  {
     title: "Resume Analyzer",
     description: "Developed an application that analyzes resumes based on job descriptions using natural language processing techniques.",
     tags: ["Python", "NLP", "Flask"],
@@ -311,9 +327,9 @@ export default function App() {
 
   const filtered = ALL_PROJECTS.filter(p => {
     if (activeFilter === 'All') return true;
-    if (activeFilter === 'AI / ML') return p.tags.some(t => ['Deep Learning', 'NLP', 'ML', 'CNN', 'OpenCV'].includes(t));
+    if (activeFilter === 'AI / ML') return p.tags.some(t => ['Deep Learning', 'NLP', 'ML', 'CNN', 'OpenCV', 'AI', 'LangChain'].includes(t));
     if (activeFilter === 'Python') return p.tags.includes('Python');
-    if (activeFilter === 'Web') return p.tags.some(t => ['HTML', 'CSS', 'JS', 'Web Dev', 'React'].includes(t));
+    if (activeFilter === 'Web') return p.tags.some(t => ['HTML', 'CSS', 'JS', 'Web Dev', 'React', 'Real-time'].includes(t));
     return true;
   });
 

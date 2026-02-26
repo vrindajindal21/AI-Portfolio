@@ -28,6 +28,18 @@ SAMPLE_RESUME = {
     ],
     "projects": [
         {
+            "title": "Real-time Expert Booking System",
+            "tech_stack": ["React", "Node.js", "MongoDB", "Socket.io"],
+            "year": "2024",
+            "description": "Developed a real-time platform for booking expert consultations with instant availability tracking and secure payment integration."
+        },
+        {
+            "title": "Titanic Chatbot",
+            "tech_stack": ["Python", "FastAPI", "LangChain", "Pandas"],
+            "year": "2025",
+            "description": "An interactive AI agent that analyzes the Titanic dataset, providing natural language insights and data visualizations."
+        },
+        {
             "title": "Resume Analyzer",
             "tech_stack": ["Python", "NLP", "Flask"],
             "year": "2025",
