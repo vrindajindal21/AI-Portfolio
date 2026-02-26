@@ -46,14 +46,8 @@ def init_db():
 
 
 def get_resume_text() -> str:
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("SELECT content FROM resume ORDER BY id DESC LIMIT 1")
-    row = c.fetchone()
-    conn.close()
-    if not row:
-        return json.dumps(SAMPLE_RESUME)
-    return row[0]
+    # Bypass DB cache to ensure latest data is always used
+    return json.dumps(SAMPLE_RESUME)
 
 
 @app.on_event("startup")
