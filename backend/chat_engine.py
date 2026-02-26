@@ -73,12 +73,18 @@ async def ask_question(question: str, resume_context: str) -> str:
         return f"{name} possesses strong foundations in: **{skills_str}**. She is proficient in bridging the gap between AI research and production-ready code."
 
     # Projects
-    if any(k in q for k in ["project", "build", "work", "analyzer", "wild animal", "animal", "human", "classifier", "fraud", "buddy", "health", "booking", "titanic", "expert"]):
+    if any(k in q for k in ["project", "build", "work", "titanic", "expert", "analyzer", "animal", "classifier", "fraud", "buddy", "health", "calculator", "restaurant"]):
+        # Check for specific project questions
+        for p in projects:
+            title = str(p.get("title", "")).lower()
+            if any(word in q for word in title.split()):
+                return f"**{p.get('title')}** ({p.get('year')}):\n\n{p.get('description')}\n\n**Tech Stack:** {', '.join(p.get('tech_stack', []))}\n\n[GitHub]({p.get('github')}) | [Demo]({p.get('demo')})"
+
         p_list = "\n- ".join(project_titles)
         return (
             f"{name} has spearheaded {len(projects)} technical projects, including:\n\n"
             f"- {p_list}\n\n"
-            f"Her work spans across Real-time systems, Computer Vision, and NLP solutions."
+            f"You can ask me specifically about any of these to learn more!"
         )
 
     # Leadership
