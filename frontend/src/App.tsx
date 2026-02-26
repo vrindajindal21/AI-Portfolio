@@ -114,7 +114,7 @@ function HeroVisual() {
 }
 
 
-const ALL_PROJECTS = [
+const FALLBACK_PROJECTS = [
   {
     title: "Real-time Expert Booking System",
     description: "Developed a real-time platform for booking expert consultations with instant availability tracking and secure payment integration.",
@@ -130,103 +130,15 @@ const ALL_PROJECTS = [
     year: "2025",
     github: "https://github.com/vrindajindal21/-titanic-chatbot",
     demo: "https://titanic-chat.streamlit.app/"
-  },
-  {
-    title: "Resume Analyzer",
-    description: "Developed an application that analyzes resumes based on job descriptions using natural language processing techniques.",
-    tags: ["Python", "NLP", "Flask"],
-    year: "2025",
-    github: "https://github.com",
-    demo: "#"
-  },
-  {
-    title: "Wild Animal Detection & Alert System",
-    description: "Built a real-time YOLO-based animal detection system that processes live video via OpenCV and triggers instant SMS/notification alerts for safety monitoring.",
-    tags: ["Deep Learning", "Python", "OpenCV"],
-    year: "2025",
-    github: "https://github.com",
-    demo: "#"
-  },
-  {
-    title: "Human vs Animal Image Classifier",
-    description: "Built a website that classifies uploaded images as either human or animal using ANN, RNN, and CNN models.",
-    tags: ["Deep Learning", "CNN", "Python"],
-    year: "2025",
-    github: "https://github.com",
-    demo: "#"
-  },
-  {
-    title: "Daily Buddy App",
-    description: "[Releasing soon on Play Store] Designed a mobile app to plan daily schedules, send personalized notifications, and manage tasks, Budget, health tracker and many more features.",
-    tags: ["Mobile", "UI/UX", "Firebase"],
-    year: "2025",
-    github: "https://github.com"
-  },
-  {
-    title: "Health Tracker",
-    description: "Designed a custom health metric tracking system with configurable dashboards, allowing users to personalize their health monitoring experience.",
-    tags: ["Web Dev", "UI/UX", "JS"],
-    year: "2025",
-    github: "https://github.com"
-  },
-  {
-    title: "Fraud Detection",
-    description: "Built a website that classifies where there is a fraud or not using Ai-ml techniques.",
-    tags: ["ML", "Python", "Flask"],
-    year: "2024",
-    github: "https://github.com",
-    demo: "#"
-  },
-  {
-    title: "Scientific Calculator",
-    description: "Built a GUI-based scientific calculator application using Python's Tkinter library.",
-    tags: ["Python", "GUI", "Tkinter"],
-    year: "2024",
-    github: "https://github.com"
-  },
-  {
-    title: "Restaurant Website",
-    description: "Created a responsive and interactive restaurant website with a modern UI and smooth navigation.",
-    tags: ["HTML", "CSS", "JS"],
-    year: "2023",
-    github: "https://github.com",
-    demo: "#"
   }
-];
-
-const SKILL_GROUPS = [
-  {
-    name: "AI & Machine Learning",
-    items: ["Deep Learning", "NLP", "Computer Vision", "Data Analysis", "YOLO v8", "TensorFlow", "Scikit-Learn"],
-    icon: <Brain className="text-accent" />
-  },
-  {
-    name: "Primary Languages",
-    items: ["Python", "C++", "Java", "SQL", "JavaScript", "C"],
-    icon: <Code2 className="text-secondary" />
-  },
-  {
-    name: "Core Computer Science",
-    items: ["DSA", "OOPs", "DBMS", "Operating Systems", "Networking"],
-    icon: <Terminal className="text-accent" />
-  },
-  {
-    name: "Development",
-    items: ["React", "Flask", "HTML/CSS", "Mobile Dev", "Web Dev"],
-    icon: <Layers className="text-secondary" />
-  }
-];
-
-const CERTIFICATIONS = [
-  { name: "Algorithmic Toolbox", issuer: "UC San Diego" },
-  { name: "Supervised Machine Learning", issuer: "IBM" },
-  { name: "Programming Using C++", issuer: "Infosys" },
-  { name: "C Programming Course", issuer: "Infosys" },
-  { name: "Introduction to Object-Oriented Programming with Java", issuer: "Coursera" },
-  { name: "Python", issuer: "Infosys" }
 ];
 
 export default function App() {
+  const [resumeData, setResumeData] = useState<any>(null);
+  const [projects, setProjects] = useState<any[]>(FALLBACK_PROJECTS);
+  const [skillGroups, setSkillGroups] = useState<any[]>([]);
+  const [certifications, setCertifications] = useState<any[]>([]);
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeFilter, setActiveFilter] = useState('All');
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
@@ -237,6 +149,56 @@ export default function App() {
   const [popupDismissed, setPopupDismissed] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Fetch dynamic resume data from backend
+  useEffect(() => {
+    async function fetchResume() {
+      try {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+        const res = await fetch(`${baseUrl}/api/resume`);
+        if (res.ok) {
+          const data = await res.json();
+          setResumeData(data);
+
+          // Map Projects
+          if (data.projects) {
+            setProjects(data.projects.map((p: any) => ({
+              title: p.title,
+              description: p.description,
+              tags: p.tech_stack || [],
+              year: p.year,
+              github: p.github || "https://github.com/vrindajindal21",
+              demo: p.demo || "#"
+            })));
+          }
+
+          // Map Certifications
+          if (data.certifications) {
+            setCertifications(data.certifications.map((c: string) => {
+              const [name, issuer] = c.split(' (');
+              return { name, issuer: issuer ? issuer.replace(')', '') : 'Credential' };
+            }));
+          }
+
+          // Map Skills
+          if (data.skills) {
+            const groups = Object.entries(data.skills).map(([name, items]: [string, any]) => {
+              let icon = <Layers className="text-secondary" />;
+              if (name.includes('AI') || name.includes('Machine')) icon = <Brain className="text-accent" />;
+              if (name.includes('Languages')) icon = <Code2 className="text-secondary" />;
+              if (name.includes('Technical')) icon = <Terminal className="text-accent" />;
+
+              return { name, items, icon };
+            });
+            setSkillGroups(groups);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch dynamic resume data:", err);
+      }
+    }
+    fetchResume();
+  }, []);
 
   const THEMES = [
     { id: 'violet', label: 'Violet', accent: '#8b5cf6', secondary: '#06b6d4', bg: '#020617', bgDark: '#0f172a', textMain: '#f8fafc', textMuted: '#94a3b8', glass: 'rgba(15,23,42,0.65)', card: '#1e293b' },
@@ -325,11 +287,11 @@ export default function App() {
 
   const FILTERS = ['All', 'AI / ML', 'Python', 'Web'];
 
-  const filtered = ALL_PROJECTS.filter(p => {
+  const filtered = projects.filter(p => {
     if (activeFilter === 'All') return true;
-    if (activeFilter === 'AI / ML') return p.tags.some(t => ['Deep Learning', 'NLP', 'ML', 'CNN', 'OpenCV', 'AI', 'LangChain'].includes(t));
+    if (activeFilter === 'AI / ML') return p.tags.some((t: string) => ['Deep Learning', 'NLP', 'ML', 'CNN', 'OpenCV', 'AI', 'LangChain'].includes(t));
     if (activeFilter === 'Python') return p.tags.includes('Python');
-    if (activeFilter === 'Web') return p.tags.some(t => ['HTML', 'CSS', 'JS', 'Web Dev', 'React', 'Real-time'].includes(t));
+    if (activeFilter === 'Web') return p.tags.some((t: string) => ['HTML', 'CSS', 'JS', 'Web Dev', 'React', 'Real-time'].includes(t));
     return true;
   });
 
@@ -538,8 +500,8 @@ export default function App() {
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
             <div className="nav-actions">
-              <a href="https://www.linkedin.com/in/vrinda-jindal-936749361" target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ padding: '8px' }}><Linkedin size={20} /></a>
-              <a href="mailto:e23bcau0076@bennett.edu.in" className="btn-secondary" style={{ padding: '8px' }}><Mail size={20} /></a>
+              <a href={resumeData?.personal_info?.linkedin || "https://www.linkedin.com/in/vrinda-jindal-936749361"} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ padding: '8px' }}><Linkedin size={20} /></a>
+              <a href={`mailto:${resumeData?.personal_info?.email || "e23bcau0076@bennett.edu.in"}`} className="btn-secondary" style={{ padding: '8px' }}><Mail size={20} /></a>
             </div>
           </div>
         </div>
@@ -798,7 +760,7 @@ export default function App() {
                   >
                     <HeroVisual />
                     <div style={{ fontSize: '0.85rem', fontWeight: 700, marginTop: '10px', letterSpacing: '2px', opacity: 0.92, whiteSpace: 'nowrap' }}>
-                      VRINDA JINDAL
+                      {resumeData?.personal_info?.name || "VRINDA JINDAL"}
                     </div>
                   </motion.div>
                 </div>
@@ -825,7 +787,7 @@ export default function App() {
                   <Target size={150} />
                 </div>
                 <p style={{ fontSize: '1.15rem', color: 'var(--text-main)', marginBottom: '24px', lineHeight: '1.7' }}>
-                  Ambitious <strong>BCA (AI Specialization)</strong> student at Bennett University with strong foundations in <strong>Artificial Intelligence, Machine Learning, Data Analysis, and Software Development</strong>. Experienced in building AI-driven applications, real-time detection systems, and full-stack web solutions. Currently seeking <strong>internship opportunities</strong> where I can apply technical skills to solve practical problems and contribute to innovative teams.
+                  {resumeData?.profile || "Ambitious and Dedicated BCA student specializing in Artificial Intelligence with a strong foundation in programming, data structures, software development, and Data Analysis. Familiar with AI/ML concepts, Data Analyst methodologies, and full-stack development through academic and project work."}
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
                   <motion.div
@@ -949,7 +911,7 @@ export default function App() {
                 viewport={{ once: true }}
                 variants={containerVariants}
               >
-                {SKILL_GROUPS.map((group, idx) => {
+                {skillGroups.map((group, idx) => {
                   const groupColors = [
                     { bg: 'rgba(244,63,94,0.08)', border: 'rgba(244,63,94,0.22)', icon: 'rgba(244,63,94,0.18)', glow: '#f43f5e' },
                     { bg: 'rgba(168,85,247,0.08)', border: 'rgba(168,85,247,0.22)', icon: 'rgba(168,85,247,0.18)', glow: '#a855f7' },
@@ -1002,38 +964,45 @@ export default function App() {
             <section id="education" style={{ marginBottom: '80px' }}>
               <h2 className="section-title"><span></span>Academic Background</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <div className="glass" style={{ padding: '32px', borderLeft: '4px solid var(--accent)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                    <h3 style={{ fontSize: '1.3rem' }}>BCA (AI Specialization)</h3>
-                    <span className="tag">2023 - 2026</span>
-                  </div>
-                  <p style={{ color: 'var(--text-main)', fontWeight: 600 }}>Bennett University, Greater Noida</p>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '15px' }}>School of Computer Engineering & Technology</p>
-                  <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '15px' }}>
-                    <div style={{ background: 'var(--bg-darker)', padding: '8px 16px', borderRadius: '8px', border: '1px solid var(--accent)' }}>
-                      <span style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '1.1rem' }}>8.82 CGPA</span>
-                    </div>
-                    <span className="tag">Consistent Performer</span>
-                    <div className="tag" style={{ background: 'rgba(255, 215, 0, 0.1)', border: '1px solid gold', color: 'gold' }}>
-                      <Award size={14} style={{ marginRight: '6px' }} /> Dean's List Award
-                    </div>
-                  </div>
-                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  {(resumeData?.education || []).map((ed: any, idx: number) => {
+                    const edColors = ['#a855f7', '#10b981', '#f59e0b', '#6366f1'];
+                    const col = edColors[idx % edColors.length];
+                    const isBCA = ed.degree?.includes('BCA');
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                  {[
-                    { level: 'Class XII (CBSE)', school: 'S.D Public School', score: '77.2%', year: '2023', color: '#a855f7' },
-                    { level: 'Class X (ICSE)', school: 'Shardein School', score: '86.8%', year: '2021', color: '#10b981' },
-                  ].map(ed => (
-                    <div key={ed.level} className="glass" style={{ padding: '24px', borderTop: `3px solid ${ed.color}` }}>
-                      <h4 style={{ margin: '0 0 6px 0', color: ed.color }}>{ed.level}</h4>
-                      <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '14px' }}>{ed.school}</p>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ fontWeight: 800, fontSize: '1.3rem', background: `linear-gradient(135deg, ${ed.color}, #fff)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{ed.score}</span>
-                        <span className="tag">{ed.year}</span>
+                    return (
+                      <div key={idx} className="glass" style={{
+                        padding: '24px',
+                        borderTop: isBCA ? '4px solid var(--accent)' : `3px solid ${col}`,
+                        gridColumn: isBCA ? '1 / -1' : 'auto'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', alignItems: 'flex-start' }}>
+                          <h3 style={{ fontSize: isBCA ? '1.3rem' : '1.1rem', color: isBCA ? 'var(--text-main)' : col }}>
+                            {ed.degree}
+                          </h3>
+                          <span className="tag">{ed.period}</span>
+                        </div>
+                        <p style={{ color: 'var(--text-main)', fontWeight: 600 }}>{ed.institution}</p>
+                        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '15px', marginTop: '15px' }}>
+                          <div style={{
+                            background: 'var(--bg-darker)',
+                            padding: '6px 14px',
+                            borderRadius: '8px',
+                            border: `1px solid ${isBCA ? 'var(--accent)' : col}`
+                          }}>
+                            <span style={{ color: isBCA ? 'var(--accent)' : col, fontWeight: 700, fontSize: '1rem' }}>
+                              {ed.score}
+                            </span>
+                          </div>
+                          {isBCA && (
+                            <div className="tag" style={{ background: 'rgba(255, 215, 0, 0.1)', border: '1px solid gold', color: 'gold' }}>
+                              <Award size={14} style={{ marginRight: '6px' }} /> Dean's List Award
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </section>
@@ -1041,7 +1010,7 @@ export default function App() {
             <section id="certifications" style={{ marginBottom: '80px' }}>
               <h2 className="section-title"><span></span>Certifications</h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
-                {CERTIFICATIONS.map((cert, i) => {
+                {certifications.map((cert, i) => {
                   const certColors = ['#f43f5e', '#a855f7', '#10b981', '#f59e0b', '#6366f1', '#14b8a6'];
                   const col = certColors[i % certColors.length];
                   return (

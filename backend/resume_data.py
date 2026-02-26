@@ -31,61 +31,81 @@ SAMPLE_RESUME = {
             "title": "Real-time Expert Booking System",
             "tech_stack": ["React", "Node.js", "MongoDB", "Socket.io"],
             "year": "2024",
-            "description": "Developed a real-time platform for booking expert consultations with instant availability tracking and secure payment integration."
+            "description": "Developed a real-time platform for booking expert consultations with instant availability tracking and secure payment integration.",
+            "github": "https://github.com/vrindajindal21/Real-Time-Expert-Session-Booking-System",
+            "demo": "https://real-time-expert-session-booking.vercel.app/"
         },
         {
             "title": "Titanic Chatbot",
             "tech_stack": ["Python", "FastAPI", "LangChain", "Pandas"],
             "year": "2025",
-            "description": "An interactive AI agent that analyzes the Titanic dataset, providing natural language insights and data visualizations."
+            "description": "An interactive AI agent that analyzes the Titanic dataset, providing natural language insights and data visualizations.",
+            "github": "https://github.com/vrindajindal21/-titanic-chatbot",
+            "demo": "https://titanic-chat.streamlit.app/"
         },
         {
             "title": "Resume Analyzer",
             "tech_stack": ["Python", "NLP", "Flask"],
             "year": "2025",
-            "description": "Developed an application that analyzes resumes based on job descriptions using natural language processing techniques."
+            "description": "Developed an application that analyzes resumes based on job descriptions using natural language processing techniques.",
+            "github": "https://github.com/vrindajindal21",
+            "demo": "#"
         },
         {
             "title": "Wild Animal Detection & Alert System",
             "tech_stack": ["Python", "Deep Learning", "Open CV"],
             "year": "2025",
-            "description": "Built a real-time YOLO-based animal detection system that processes live video via OpenCV and triggers instant SMS/notification alerts for safety monitoring."
+            "description": "Built a real-time YOLO-based animal detection system that processes live video via OpenCV and triggers instant SMS/notification alerts for safety monitoring.",
+            "github": "https://github.com/vrindajindal21",
+            "demo": "#"
         },
         {
             "title": "Human vs Animal Image Classifier",
             "tech_stack": ["Python", "Deep Learning"],
             "year": "2025",
-            "description": "Built a website that classifies uploaded images as either human or animal using ANN, RNN, and CNN models."
+            "description": "Built a website that classifies uploaded images as either human or animal using ANN, RNN, and CNN models.",
+            "github": "https://github.com/vrindajindal21",
+            "demo": "#"
         },
         {
             "title": "Daily Buddy App",
             "tech_stack": ["React Native", "Android"],
             "year": "2025",
-            "description": "[Releasing soon on Play Store] Designed a mobile app to plan daily schedules, send personalized notifications, and manage tasks, Budget, health tracker and many more features."
+            "description": "[Releasing soon on Play Store] Designed a mobile app to plan daily schedules, send personalized notifications, and manage tasks, Budget, health tracker and many more features.",
+            "github": "https://github.com/vrindajindal21",
+            "demo": "#"
         },
         {
             "title": "Health Tracker",
             "tech_stack": ["Zira Software"],
             "year": "2025",
-            "description": "Designed a custom health metric tracking system with configurable dashboards, allowing users to personalize their health monitoring experience."
+            "description": "Designed a custom health metric tracking system with configurable dashboards, allowing users to personalize their health monitoring experience.",
+            "github": "https://github.com/vrindajindal21",
+            "demo": "#"
         },
         {
             "title": "Scientific Calculator",
             "tech_stack": ["Python"],
             "year": "2024",
-            "description": "Built a GUI-based scientific calculator application using Python's Tkinter library."
+            "description": "Built a GUI-based scientific calculator application using Python's Tkinter library.",
+            "github": "https://github.com/vrindajindal21",
+            "demo": "#"
         },
         {
             "title": "Fraud Detection",
             "tech_stack": ["Python", "Machine Learning"],
             "year": "2024",
-            "description": "Built a website that classifies where there is a fraud or not using Ai-ml techniques."
+            "description": "Built a website that classifies where there is a fraud or not using Ai-ml techniques.",
+            "github": "https://github.com/vrindajindal21",
+            "demo": "#"
         },
         {
             "title": "Restaurant Website",
             "tech_stack": ["HTML", "CSS", "JavaScript"],
             "year": "2023",
-            "description": "Created a responsive and interactive restaurant website with a modern UI and smooth navigation."
+            "description": "Created a responsive and interactive restaurant website with a modern UI and smooth navigation.",
+            "github": "https://github.com/vrindajindal21",
+            "demo": "#"
         }
     ],
     "certifications": [

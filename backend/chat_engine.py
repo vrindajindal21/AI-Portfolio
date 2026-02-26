@@ -35,7 +35,7 @@ async def ask_question(question: str, resume_context: str) -> str:
     edu_str = f"{education_info.get('degree', 'BCA (AI)')} student at {education_info.get('institution', 'Bennett University')}, {education_info.get('score', 'CGPA: 8.82')}"
     
     projects = data.get("projects", [])
-    project_titles = [p.get("title") for p in projects]
+    project_titles = [str(p.get("title")) for p in projects if p.get("title")]
     
     skills = data.get("skills", {})
     all_skills = []
