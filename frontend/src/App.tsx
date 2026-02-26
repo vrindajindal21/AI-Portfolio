@@ -556,7 +556,11 @@ export default function App() {
               transition={{ delay: 1.0 }}
               style={{ display: 'flex', gap: '28px', margin: '24px 0', flexWrap: 'wrap' }}
             >
-              {[{ val: '8+', label: 'Projects', color: 'var(--accent)' }, { val: '8.82', label: 'CGPA', color: 'var(--secondary)' }, { val: '6+', label: 'Certs', color: '#10b981' }].map(s => (
+              {[
+                { val: `${projects.length}+`, label: 'Projects', color: 'var(--accent)' },
+                { val: resumeData?.education?.[0]?.score?.split(': ')?.[1] || '8.82', label: 'CGPA', color: 'var(--secondary)' },
+                { val: `${certifications.length}+`, label: 'Certs', color: '#10b981' }
+              ].map(s => (
                 <motion.div
                   key={s.label}
                   initial={{ scale: 0.5, opacity: 0 }}
