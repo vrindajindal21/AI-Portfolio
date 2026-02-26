@@ -30,12 +30,25 @@ async def ask_question(question: str, resume_context: str) -> str:
             "skills": {}
         }
 
+    if not isinstance(data, dict):
+        data = {
+            "personal_info": {"name": "Vrinda Jindal"},
+            "education": [{"degree": "BCA (AI Specialization)", "institution": "Bennett University", "score": "8.82"}],
+            "projects": [],
+            "skills": {},
+            "hobbies": ["Reading", "Traveling", "Exploring AI Trends"]
+        }
+
     personal = data.get("personal_info", {})
+    if not isinstance(personal, dict): personal = {}
     name = personal.get("name", "Vrinda Jindal")
+    
     education_list = data.get("education", [{}])
-    education_info = education_list[0] if isinstance(education_list, list) and education_list else {}
-    if not isinstance(education_info, dict):
-        education_info = {}
+    education_info = {}
+    if isinstance(education_list, list) and education_list:
+        first_edu = education_list[0]
+        if isinstance(first_edu, dict):
+            education_info = first_edu
         
     edu_str = f"{education_info.get('degree', 'BCA (AI)')} student at {education_info.get('institution', 'Bennett University')}, {education_info.get('score', 'CGPA: 8.82')}"
     
@@ -44,9 +57,9 @@ async def ask_question(question: str, resume_context: str) -> str:
     if isinstance(projects, list):
         for p in projects:
             if isinstance(p, dict):
-                title = p.get("title")
-                if title:
-                    project_titles.append(str(title))
+                p_title = p.get("title")
+                if p_title:
+                    project_titles.append(str(p_title))
     
     skills_dict = data.get("skills", {})
     all_skills: List[str] = []
@@ -69,6 +82,14 @@ async def ask_question(question: str, resume_context: str) -> str:
 
     # Education & Achievements
     if any(k in q for k in ["edu", "cgpa", "university", "college", "school", "grade", "study", "dean", "award", "list"]):
+        edu_entries = data.get("education", [])
+        if isinstance(edu_entries, list):
+            edu_details = []
+            for e in edu_entries:
+                if isinstance(e, dict):
+                    edu_details.append(f"▸ **{e.get('degree')}** from {e.get('institution')} ({e.get('period')}) - **{e.get('score')}**")
+            edu_str_full = "\n".join(edu_details)
+            return f"{name}'s academic excellence is reflected in her background:\n\n{edu_str_full}\n\nShe maintains a strong **8.82 CGPA** at Bennett University."
         return (
             f"{name} is pursuing her **{edu_str}**. "
             f"She is a top-performing student with an impressive **8.82 CGPA** and is dedicated to academic and technical excellence."
@@ -81,7 +102,7 @@ async def ask_question(question: str, resume_context: str) -> str:
         return f"{name} possesses strong foundations in: **{skills_str}**. She is proficient in bridging the gap between AI research and production-ready code."
 
     # Projects
-    if any(k in q for k in ["project", "build", "work", "titanic", "expert", "analyzer", "animal", "classifier", "fraud", "buddy", "health", "calculator", "restaurant", "make", "create", "done"]):
+    if any(k in q for k in ["project", "build", "work", "titanic", "expert", "analyzer", "animal", "classifier", "fraud", "buddy", "health", "calculator", "restaurant", "make", "create", "done", "detail"]):
         # Check for specific project questions
         for p in projects:
             title = str(p.get("title", "")).lower()
@@ -94,49 +115,60 @@ async def ask_question(question: str, resume_context: str) -> str:
                     f"🔗 [GitHub]({p.get('github')}) | 🌐 [Live Demo]({p.get('demo')})"
                 )
 
-        # General project list
+        # General project list with more detail
         p_items: List[str] = []
         if isinstance(projects, list):
-            limit = min(10, len(projects))
+            limit = len(projects)
             for i in range(limit):
                 p = projects[i]
                 if isinstance(p, dict):
                     title = p.get('title', 'Unknown Project')
-                    tech_list = p.get('tech_stack', [])
-                    first_tech = tech_list[0] if tech_list and isinstance(tech_list, list) else "Tech"
-                    p_items.append(f"▸ **{title}** ({first_tech})")
+                    desc = p.get('description', '')
+                    # Shorten desc for list
+                    short_desc = (desc[:85] + '...') if len(desc) > 85 else desc
+                    p_items.append(f"▸ **{title}**: {short_desc}")
         
         p_list = "\n".join(p_items)
         return (
-            f"{name} has spearheaded **{len(projects)} technical projects**, focusing on AI/ML and Full-Stack development:\n\n"
+            f"{name} has spearheaded **{len(projects)} technical projects**, specializing in AI/ML and Production systems:\n\n"
             f"{p_list}\n\n"
-            f"Would you like more details on any specific project? Just ask!"
+            f"You can ask me for 'details on [project name]' to get the full tech stack and links!"
         )
 
-    # Leadership
+    # Leadership & Positions
     if any(k in q for k in ["leader", "role", "responsibility", "br", "batch", "representative", "team"]):
         responsibilities = data.get("positions_of_responsibility", [])
-        resp_str = "\n- ".join([f"**{r}**" for r in responsibilities]) if responsibilities else "leading various technical teams."
+        resp_str = "\n".join([f"▸ **{r}**" for r in responsibilities]) if responsibilities else "leading various technical teams."
         return (
             f"{name} demonstrates exceptional leadership through her roles as:\n\n"
             f"{resp_str}\n\n"
             f"She focuses on delivery, collaboration, and steering teams through high-pressure development projects."
         )
 
+    # Hobbies & Interests
+    if any(k in q for k in ["hobby", "hobbies", "interest", "free time", "do for fun", "outside of work"]):
+        raw_hobbies = data.get("hobbies", [])
+        hobbies_list = [str(h) for h in raw_hobbies] if isinstance(raw_hobbies, list) else []
+        h_str = ", ".join(hobbies_list) if hobbies_list else "Exploring AI trends and reading."
+        return f"Beyond coding, {name} is passionate about: **{h_str}**. She believes in continuous learning and exploring new horizons!"
+
     # 2. AI FALLBACK (OpenRouter) - For any complex HR questions
     if not OPENROUTER_API_KEY:
         return f"{name} is a dedicated BCA AI student with an 8.82 CGPA and a strong portfolio in AI/ML. She is available for 2026 internships."
 
+    h_context = ", ".join([str(h) for h in data.get("hobbies", [])]) if isinstance(data.get("hobbies"), list) else "AI trends"
     prompt = f"""
     You are the AI Recruiter/Assistant for {name}. 
     A recruiter or HR professional is asking about her. 
     
     YOUR MISSION: 
     - Be extremely positive, professional, and highlight her strengths.
-    - Focus on her BCA (AI Specialization) and her strong 8.82 academic CGPA.
-    - Use the provided context to answer specifically and FACTUALLY based on the data.
-    - CRITICAL: She has {len(projects)} projects in her portfolio. List them accurately if asked.
-    - If you don't know something, suggest they check her LinkedIn or email her.
+    - Focus on her BCA (AI Specialization) at Bennett University and her 8.82 academic CGPA.
+    - Provide DETAILED and FACTUAL answers using the context provided.
+    - If asked for projects, provide summaries for all {len(projects)} projects.
+    - If asked for education, list all degrees and scores (BCA, XII, X).
+    - If asked for hobbies, mention {h_context}.
+    - Ensure you mention she is seeking internships for 2026.
     
     Resume Context: 
     {resume_context}
@@ -144,9 +176,9 @@ async def ask_question(question: str, resume_context: str) -> str:
     Question: {question}
     
     Rules:
-    - Use Markdown for bolding and lists. Use '▸' for bullet points to match the theme.
-    - Keep it concise (max 3 sentences).
-    - Avoid generic AI talk. Speak as her professional representative.
+    - Use Markdown for bolding and lists (use '▸' for bullets).
+    - Keep it concise but information-rich (max 3-4 sentences).
+    - Speak as her professional representative.
     """
 
     try:
