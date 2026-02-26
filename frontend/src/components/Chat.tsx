@@ -5,10 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 type Message = { role: 'user' | 'assistant'; text: string; timestamp: Date };
 
 const SUGGESTED_QUESTIONS = [
-  { label: "🎓 Education", query: "Tell me about her education history", hint: "BCA AI (8.82 CGPA)" },
-  { label: "🤖 AI Projects", query: "Show me all her build projects", hint: "10+ (YOLO, NLP, ML)" },
-  { label: "💼 Internships", query: "Seeking internships", hint: "Open for AI/ML roles 2026" },
-  { label: "🎭 Hobbies", query: "What does she do for fun?", hint: "Reading & AI Research" },
+  { label: "🚀 Projects", query: "Show me your full project history", hint: "10+ AI & ML Builds" },
+  { label: "🛠️ Skills", query: "What is your technical stack?", hint: "Python, Java, React, ML" },
+  { label: "🎓 Education", query: "Academic background & CGPA", hint: "BCA AI (8.82 CGPA)" },
+  { label: "🤝 Hiring", query: "2026 Internship availability", hint: "Open for AI/ML roles" },
 ];
 
 // Minimal markdown renderer (bold, bullet points, numbered lists)

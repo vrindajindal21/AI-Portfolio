@@ -115,8 +115,7 @@ async def ask_question(question: str, resume_context: str) -> str:
         project_count = len(projects)
         return (
             f"**Vrinda Jindal** has spearheaded **{project_count} technical projects**, specializing in AI/ML and Production systems:\n\n"
-            f"{p_list}\n\n"
-            f"Ask for 'details on [project name]' for the full tech stack!"
+            f"{p_list}"
         )
 
     # Career Interests & Hiring
