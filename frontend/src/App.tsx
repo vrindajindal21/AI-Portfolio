@@ -144,8 +144,8 @@ const FALLBACK_PROJECTS = [
     description: "Built a real-time YOLO-based animal detection system that processes live video via OpenCV and triggers instant SMS/notification alerts for safety monitoring.",
     tags: ["Deep Learning", "Python", "OpenCV"],
     year: "2025",
-    github: "https://github.com/vrindajindal21",
-    demo: "#"
+    github: "https://github.com/vrindajindal21/wild-animal-detection",
+    demo: "https://wildanimal-detection.streamlit.app/"
   },
   {
     title: "Human vs Animal Image Classifier",
@@ -160,7 +160,7 @@ const FALLBACK_PROJECTS = [
     description: "[Releasing soon on Play Store] Designed a mobile app to plan daily schedules, send personalized notifications, and manage tasks, Budget, health tracker and many more features.",
     tags: ["Mobile", "UI/UX", "Firebase"],
     year: "2025",
-    github: "https://github.com/vrindajindal21",
+    github: "https://github.com/vrindajindal21/dailybuddy-app",
     demo: "#"
   },
   {
@@ -416,12 +416,12 @@ export default function App() {
     }
   };
 
-  const revealVariants = {
+  const revealVariants: any = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+      transition: { duration: 0.8, ease: "easeOut" }
     }
   };
 
@@ -570,8 +570,9 @@ export default function App() {
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
             <div className="nav-actions">
-              <a href={resumeData?.personal_info?.linkedin || "https://www.linkedin.com/in/vrinda-jindal-936749361"} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ padding: '8px' }}><Linkedin size={20} /></a>
-              <a href={`mailto:${resumeData?.personal_info?.email || "e23bcau0076@bennett.edu.in"}`} className="btn-secondary" style={{ padding: '8px' }}><Mail size={20} /></a>
+              <a href={resumeData?.personal_info?.github || "https://github.com/vrindajindal21"} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ padding: '8px' }} title="GitHub"><Github size={20} /></a>
+              <a href={resumeData?.personal_info?.linkedin || "https://www.linkedin.com/in/vrinda-jindal-936749361"} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ padding: '8px' }} title="LinkedIn"><Linkedin size={20} /></a>
+              <a href={`mailto:${resumeData?.personal_info?.email || "e23bcau0076@bennett.edu.in"}`} className="btn-secondary" style={{ padding: '8px' }} title="Email"><Mail size={20} /></a>
             </div>
           </div>
         </div>
@@ -1215,7 +1216,7 @@ export default function App() {
 
           {/* Right — socials */}
           <div style={{ display: 'flex', gap: '10px' }}>
-            <a href="https://github.com" style={{ color: 'var(--text-muted)', display: 'flex' }} title="GitHub"><Github size={17} /></a>
+            <a href="https://github.com/vrindajindal21" style={{ color: 'var(--text-muted)', display: 'flex' }} target="_blank" rel="noopener noreferrer" title="GitHub"><Github size={17} /></a>
             <a href="https://www.linkedin.com/in/vrinda-jindal-936749361" style={{ color: 'var(--text-muted)', display: 'flex' }} title="LinkedIn"><Linkedin size={17} /></a>
           </div>
         </div>
