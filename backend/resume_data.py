@@ -58,7 +58,7 @@ SAMPLE_RESUME = {
             "year": "2025",
             "description": "Built a real-time YOLO-based animal detection system that processes live video via OpenCV and triggers instant SMS/notification alerts for safety monitoring.",
             "github": "https://github.com/vrindajindal21/wild-animal-detection",
-            "demo": "https://wildanimal-detection.streamlit.app/"
+            "demo": "https://wildanimal-alert.streamlit.app/"
         },
         {
             "title": "Human vs Animal Image Classifier",
