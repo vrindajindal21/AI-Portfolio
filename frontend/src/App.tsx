@@ -21,7 +21,9 @@ import {
   Target,
   FileText,
   Menu,
-  X
+  X,
+  Upload,
+  Loader2
 } from 'lucide-react';
 import { useScroll, useSpring } from 'framer-motion';
 import Chat from './components/Chat';
@@ -213,12 +215,49 @@ export default function App() {
   const [popupDismissed, setPopupDismissed] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleResumeUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+       alert("Please upload a PDF file.");
+       return;
+    }
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://ai-portfolio-q1rx.onrender.com';
+      const res = await fetch(`${baseUrl}/api/upload-resume`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        alert("Portfolio updated from your resume!");
+        window.location.reload(); // Simple refresh to show new data
+      } else {
+        const error = await res.json();
+        alert(`Upload failed: ${error.detail || "Unknown error"}`);
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Failed to connect to backend for upload.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   // Fetch dynamic resume data from backend
   useEffect(() => {
     async function fetchResume() {
       try {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://ai-portfolio-q1rx.onrender.com';
         const res = await fetch(`${baseUrl}/api/resume`);
         if (res.ok) {
           const data = await res.json();
@@ -658,9 +697,40 @@ export default function App() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2 }}
+              style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}
             >
               <a href="#chat" className="btn btn-primary">Interview My AI</a>
               <a href="#projects" className="btn btn-secondary">Explore Portfolio</a>
+              
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="file"
+                  id="resume-upload"
+                  accept=".pdf"
+                  onChange={handleResumeUpload}
+                  onClick={(e: any) => e.target.value = null}
+                  style={{ display: 'none' }}
+                />
+                <button 
+                  onClick={() => document.getElementById('resume-upload')?.click()}
+                  className="btn btn-secondary"
+                  disabled={isUploading}
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px', 
+                    border: '1px dashed var(--accent)',
+                    background: 'rgba(139, 92, 246, 0.05)'
+                  }}
+                >
+                  {isUploading ? (
+                    <Loader2 size={18} className="animate-spin" />
+                  ) : (
+                    <Upload size={18} />
+                  )}
+                  {isUploading ? 'Parsing Resume...' : 'Update via Resume'}
+                </button>
+              </div>
             </motion.div>
           </div>
 
