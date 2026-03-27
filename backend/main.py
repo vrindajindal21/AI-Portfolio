@@ -71,6 +71,20 @@ def save_resume_data(data: dict):
 @app.on_event("startup")
 async def startup_event():
     init_db()
+    # Force update ICSE to CBSE if found in existing data
+    raw = get_resume_text()
+    try:
+        data = json.loads(raw)
+        updated = False
+        for edu in data.get("education", []):
+            if "ICSE" in edu.get("degree", ""):
+                edu["degree"] = edu["degree"].replace("ICSE", "CBSE")
+                updated = True
+        if updated:
+            save_resume_data(data)
+            logging.info("Forced database update: ICSE -> CBSE")
+    except Exception as e:
+        logging.error(f"Startup check failed: {e}")
 
 
 @app.get("/api/resume")
