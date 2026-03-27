@@ -21,7 +21,7 @@ SAMPLE_RESUME = {
             "score": "Percentage: 77.2%"
         },
         {
-            "degree": "Class X (ICSE)",
+            "degree": "Class X (CBSE)",
             "institution": "Shardein School, Meerut Road, Muzaffarnagar, Uttar Pradesh, India",
             "period": "2021",
             "score": "Percentage: 86.8%"
