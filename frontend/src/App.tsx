@@ -118,6 +118,14 @@ function HeroVisual() {
 
 const FALLBACK_PROJECTS = [
   {
+    title: "Aura Peak Official",
+    description: "Designed and developed a fully functional Shopify store featuring a premium custom theme and optimized shopping experience.",
+    tags: ["Shopify", "E-commerce", "UI/UX"],
+    year: "2026",
+    github: "https://github.com/vrindajindal21",
+    demo: "https://aura-peak-official.myshopify.com/"
+  },
+  {
     title: "Real-time Expert Booking System",
     description: "Developed a real-time platform for booking expert consultations with instant availability tracking and secure payment integration.",
     tags: ["React", "Node.js", "Web Dev", "Real-time"],

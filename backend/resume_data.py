@@ -29,6 +29,14 @@ SAMPLE_RESUME = {
     ],
     "projects": [
         {
+            "title": "Aura Peak Official",
+            "tech_stack": ["Shopify", "E-commerce", "Liquid"],
+            "year": "2024",
+            "description": "Designed and developed a fully functional Shopify store featuring a premium custom theme and optimized shopping experience.",
+            "github": "https://github.com/vrindajindal21",
+            "demo": "https://aura-peak-official.myshopify.com/"
+        },
+        {
             "title": "Real-time Expert Booking System",
             "tech_stack": ["React", "Node.js", "MongoDB", "Socket.io"],
             "year": "2024",
